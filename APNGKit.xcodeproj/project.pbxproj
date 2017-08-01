@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4AC986AE1F2E8CF300834043 /* AssemblerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC986AD1F2E8CF300834043 /* AssemblerTests.swift */; };
+		4AE7CB031F25861500DC847C /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE7CB021F25861500DC847C /* Assembler.swift */; };
 		4B0D673D1B8E9DBF00876BDF /* APNGKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D673C1B8E9DBF00876BDF /* APNGKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B0D67441B8E9DC000876BDF /* APNGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0D67391B8E9DBF00876BDF /* APNGKit.framework */; };
 		4B0D67491B8E9DC000876BDF /* APNGKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D67481B8E9DC000876BDF /* APNGKitTests.swift */; };
@@ -83,7 +85,7 @@
 		B25269841E8FDA970096A0A7 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B68F21B8EB33100C4868A /* pngwio.c */; };
 		B25269851E8FDA970096A0A7 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B68F31B8EB33100C4868A /* pngwrite.c */; };
 		B25269861E8FDA970096A0A7 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B68F41B8EB33100C4868A /* pngwtran.c */; };
-		B253100B1E90A99400A65CEA /* APNGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B252695A1E8FD8EA0096A0A7 /* APNGKit.framework */; };
+		B253100B1E90A99400A65CEA /* APNGKit_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B252695A1E8FD8EA0096A0A7 /* APNGKit_macOS.framework */; };
 		B253101B1E90AA3200A65CEA /* demo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B5DF6831B99718C00C4D421 /* demo.png */; };
 		B253101C1E90AA3200A65CEA /* pyani.apng in Resources */ = {isa = PBXBuildFile; fileRef = D187FEE81B934F1B0013372D /* pyani.apng */; };
 		B253101D1E90AA3200A65CEA /* elephant_apng.apng in Resources */ = {isa = PBXBuildFile; fileRef = D190199F1B93351300E16EDB /* elephant_apng.apng */; };
@@ -178,6 +180,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4AC986AD1F2E8CF300834043 /* AssemblerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = AssemblerTests.swift; sourceTree = "<group>"; tabWidth = 4; };
+		4AE7CB021F25861500DC847C /* Assembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
 		4B0D67391B8E9DBF00876BDF /* APNGKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APNGKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0D673C1B8E9DBF00876BDF /* APNGKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APNGKit.h; sourceTree = "<group>"; };
 		4B0D673E1B8E9DBF00876BDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -223,7 +227,7 @@
 		4B7D4ED51B9559BF005C0598 /* filter_neon.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = filter_neon.S; sourceTree = "<group>"; };
 		4B7D4ED81B955CBF005C0598 /* arm_init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = arm_init.c; sourceTree = "<group>"; };
 		4BF022031B94442800F00CDE /* APNGImageViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APNGImageViewTests.swift; sourceTree = "<group>"; };
-		B252695A1E8FD8EA0096A0A7 /* APNGKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APNGKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B252695A1E8FD8EA0096A0A7 /* APNGKit_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APNGKit_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B25269631E8FD9840096A0A7 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		B25310061E90A99400A65CEA /* APNGKitTests OSX.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "APNGKitTests OSX.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D122B9251B96CC8E00CB4F26 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -275,7 +279,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B253100B1E90A99400A65CEA /* APNGKit.framework in Frameworks */,
+				B253100B1E90A99400A65CEA /* APNGKit_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +325,7 @@
 				D199B1F81B91445100BF8358 /* APNGKitDemo.app */,
 				D199B20B1B91445100BF8358 /* APNGKitDemoTests.xctest */,
 				D199B2161B91445100BF8358 /* APNGKitDemoUITests.xctest */,
-				B252695A1E8FD8EA0096A0A7 /* APNGKit.framework */,
+				B252695A1E8FD8EA0096A0A7 /* APNGKit_macOS.framework */,
 				B25310061E90A99400A65CEA /* APNGKitTests OSX.xctest */,
 			);
 			name = Products;
@@ -340,6 +344,7 @@
 				D14B5B4F1B92DE4300F753E1 /* APNGImageCache.swift */,
 				D17398451B90A9B200913AEA /* APNGImageView.swift */,
 				4B19504F1E6D21670047B7DE /* GCDTimer.swift */,
+				4AE7CB021F25861500DC847C /* Assembler.swift */,
 			);
 			path = APNGKit;
 			sourceTree = "<group>";
@@ -356,6 +361,7 @@
 				4B6B69181B8ED1C300C4868A /* LibPNGTests.swift */,
 				4B2132091B8EF39000A39502 /* LibAPNGTests.swift */,
 				4B2132111B8EF94F00A39502 /* DisassemblerTests.swift */,
+				4AC986AD1F2E8CF300834043 /* AssemblerTests.swift */,
 				D127F62F1B91D9FD0095832A /* APNGImageTests.swift */,
 				4BF022031B94442800F00CDE /* APNGImageViewTests.swift */,
 				D19019A11B9336B100E16EDB /* APNGImageCacheTests.swift */,
@@ -521,7 +527,7 @@
 			);
 			name = "APNGKit-macOS";
 			productName = "APNGKit OSX";
-			productReference = B252695A1E8FD8EA0096A0A7 /* APNGKit.framework */;
+			productReference = B252695A1E8FD8EA0096A0A7 /* APNGKit_macOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B25310051E90A99400A65CEA /* APNGKitTests OSX */ = {
@@ -790,6 +796,7 @@
 				4B2132061B8EF20500A39502 /* Frame.swift in Sources */,
 				4B6B68FF1B8EB33100C4868A /* pngpread.c in Sources */,
 				4B21320C1B8EF44800A39502 /* Disassembler.swift in Sources */,
+				4AE7CB031F25861500DC847C /* Assembler.swift in Sources */,
 				4B1950501E6D21670047B7DE /* GCDTimer.swift in Sources */,
 				4B6B69151B8EB98300C4868A /* Reader.swift in Sources */,
 				4B6B68FB1B8EB33100C4868A /* pngget.c in Sources */,
@@ -814,6 +821,7 @@
 				4B21320A1B8EF39000A39502 /* LibAPNGTests.swift in Sources */,
 				4B0D67491B8E9DC000876BDF /* APNGKitTests.swift in Sources */,
 				D19019A21B9336B100E16EDB /* APNGImageCacheTests.swift in Sources */,
+				4AC986AE1F2E8CF300834043 /* AssemblerTests.swift in Sources */,
 				D127F6301B91D9FD0095832A /* APNGImageTests.swift in Sources */,
 				4B6B69191B8ED1C300C4868A /* LibPNGTests.swift in Sources */,
 			);
@@ -1107,8 +1115,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.onevcat.APNGKit;
-				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
-				PRODUCT_NAME = APNGKit;
+				PRODUCT_NAME = APNGKit_macOS;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1137,8 +1144,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.onevcat.APNGKit;
-				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
-				PRODUCT_NAME = APNGKit;
+				PRODUCT_NAME = APNGKit_macOS;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
