@@ -29,7 +29,7 @@ import XCTest
 class AassemblerTests: XCTestCase {
     func testWriteNoAnimation() throws {
         let assembler = Assembler()
-        let data = assembler.encode()
+        let data = try assembler.encode()
         //let data = Data()
 
         let disassembler = Disassembler(data: data)
