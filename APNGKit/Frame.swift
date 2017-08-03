@@ -39,9 +39,9 @@ class Frame {
     static var allocCount = 0
     static var deallocCount = 0
     
-    private var width: Int = 0
-    private var height: Int = 0
-    private var bits: Int = 0
+    internal var width: Int = 0
+    internal var height: Int = 0
+    internal var bits: Int = 0
     private var scale: CGFloat = 1.0
     private var blend = false
     

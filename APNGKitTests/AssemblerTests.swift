@@ -28,9 +28,13 @@ import XCTest
 
 class AassemblerTests: XCTestCase {
     func testWriteNoAnimation() throws {
-        let assembler = Assembler()
-        let data = try assembler.encode()
-        //let data = Data()
+        let metadata = APNGMeta(width: 2, height: 2, bitDepth: 8,
+                                colorType: UInt32(PNG_COLOR_TYPE_RGB),
+                                rowBytes: 2 * 8 * 3, frameCount: 2, playCount: 0, firstFrameHidden: false)
+        let assembler = try Assembler(metadata: metadata)
+        try assembler.addFrame(1)
+        try assembler.addFrame(2)
+        let data = assembler.encode()
 
         let disassembler = Disassembler(data: data)
         let meta = try disassembler.decodeMeta()
