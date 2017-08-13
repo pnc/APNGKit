@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 struct PNGError : Error {
   let message: String
@@ -51,13 +52,79 @@ func threadlongjmp(_ result: Int) -> Never {
   pthread_exit(UnsafeMutableRawPointer(bitPattern: result))
 }
 
+public struct RationalDuration {
+  let numerator: UInt16
+  let denominator: UInt16
+
+  public init(_ num: UInt16, _ den: UInt16) {
+    self.numerator = num
+    self.denominator = den
+  }
+}
+
+public struct Point {
+  let x: UInt32
+  let y: UInt32
+  public init(x: UInt32, y: UInt32) {
+    self.x = x
+    self.y = y
+  }
+}
+
+public struct APNGFrame {
+  let image: UIImage
+  let offset: Point
+  let duration: RationalDuration
+  let disposeOperation: DisposeOperation
+  let blendOperation: BlendOperation
+
+  public init(image: UIImage, duration: RationalDuration,
+       offset: Point = Point(x: 0, y: 0),
+       disposeOperation: DisposeOperation = .background,
+       blendOperation: BlendOperation = .source) {
+    self.image = image
+    self.offset = offset
+    self.duration = duration
+    self.disposeOperation = disposeOperation
+    self.blendOperation = blendOperation
+  }
+
+  public enum DisposeOperation {
+    case none
+    case previous
+    case background
+
+    // Can't use real rawValues because those have to be literals.
+    var rawValue: png_byte {
+      switch self {
+      case .none: return png_byte(PNG_DISPOSE_OP_NONE)
+      case .background: return png_byte(PNG_DISPOSE_OP_BACKGROUND)
+      case .previous: return png_byte(PNG_DISPOSE_OP_PREVIOUS)
+      }
+    }
+  }
+
+  public enum BlendOperation {
+    case source
+    case over
+
+    // Can't use real rawValues because those have to be literals.
+    var rawValue: png_byte {
+      switch self {
+      case .source: return png_byte(PNG_BLEND_OP_SOURCE)
+      case .over: return png_byte(PNG_BLEND_OP_OVER)
+      }
+    }
+  }
+}
+
 public class Assembler {
   var lastError: String?
   var png_ptr_write: png_structp
   var info_ptr_write: png_structp
   let stream = OutputStream.toMemory()
 
-  init(metadata: APNGMeta) throws {
+  public init(metadata: APNGMeta) throws {
     png_ptr_write = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                             nil, nil, nil)
     info_ptr_write = png_create_info_struct(png_ptr_write)
@@ -71,10 +138,14 @@ public class Assembler {
       let stream = Unmanaged<OutputStream>.fromOpaque(voider!).takeUnretainedValue()
       stream.write(bytes!, maxLength: length)
     }, nil)
+    png_set_flush(png_ptr_write, 0)
     let _ = threadsetjmp {
       png_set_IHDR(png_ptr_write, info_ptr_write, metadata.width, metadata.height,
-                   Int32(metadata.bitDepth), PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+                   Int32(metadata.bitDepth), Int32(metadata.colorType), PNG_INTERLACE_NONE,
                    PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      png_set_compression_level(png_ptr_write, 9);
+      png_set_compression_buffer_size(png_ptr_write, 8192 * 4)
+      png_set_bgr(png_ptr_write)
       png_set_acTL(png_ptr_write, info_ptr_write,
                    metadata.frameCount, metadata.playCount)
       png_write_info(png_ptr_write, info_ptr_write)
@@ -86,28 +157,31 @@ public class Assembler {
     }
   }
 
-  func addFrame(_ num: Int) throws {
+  public func addFrame(_ frame: APNGFrame) throws {
     let _ = threadsetjmp { () -> Int in
-      png_write_frame_head(png_ptr_write, info_ptr_write,
-                           nil, 2, 2,
-                           0, 0,
-                           1, 2,
-                           png_byte(PNG_DISPOSE_OP_NONE),
-                           png_byte(PNG_BLEND_OP_SOURCE))
-
-      //  R  G    B
-      var pixels: [png_byte]
-      switch num {
-      case 1:
-        pixels = [0, 128, 255,
-                  32, 32, 32]
-      default:
-        pixels = [32, 32, 32,
-                  0, 128, 255]
+      guard let cgImage = frame.image.cgImage,
+        let data = cgImage.dataProvider?.data else {
+          self.lastError = "Unable to get image data for frame"
+          threadlongjmp(1)
       }
 
-      png_write_row(png_ptr_write, UnsafePointer(pixels))
-      png_write_row(png_ptr_write, UnsafePointer(pixels))
+      png_write_frame_head(png_ptr_write, info_ptr_write,
+                           nil, png_uint_32(cgImage.width), png_uint_32(cgImage.height),
+                           frame.offset.x, frame.offset.y,
+                           frame.duration.numerator, frame.duration.denominator,
+                           frame.disposeOperation.rawValue,
+                           frame.blendOperation.rawValue)
+
+      guard let dataPointer: UnsafePointer<UInt8> = CFDataGetBytePtr(data) else {
+        self.lastError = "Unable to get byte pointer for image data"
+        threadlongjmp(2)
+      }
+      
+      let rowBytes = png_get_rowbytes(png_ptr_write, info_ptr_write)
+      //assert(rowBytes == cgImage.bytesPerRow)
+      for i in 0..<cgImage.height {
+        png_write_row(png_ptr_write, dataPointer.advanced(by: cgImage.bytesPerRow * i))
+      }
       png_write_frame_tail(png_ptr_write, info_ptr_write)
       return 0
     }
@@ -122,7 +196,7 @@ public class Assembler {
                              UnsafeMutablePointer(info_ptr_write))
   }
 
-  func encode() -> Data {
+  public func encode() -> Data {
     png_write_end(png_ptr_write, info_ptr_write)
     stream.close()
     return stream.property(forKey: .dataWrittenToMemoryStreamKey) as! Data

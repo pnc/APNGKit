@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A6437011F3BF9E200C1DC95 /* gradient_rgb.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */; };
+		4A984DEC1F32A79500C866B2 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A984DE91F32A79500C866B2 /* 1.png */; };
+		4A984DED1F32A79500C866B2 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A984DEA1F32A79500C866B2 /* 2.png */; };
+		4A984DEE1F32A79500C866B2 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A984DEB1F32A79500C866B2 /* 3.png */; };
+		4A984DF01F32CCDE00C866B2 /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE7CB021F25861500DC847C /* Assembler.swift */; };
+		4AB4C58D1F3A8BA60048809C /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB4C58C1F3A8BA60048809C /* Palette.swift */; };
+		4AB4C58F1F3A8E3E0048809C /* PaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB4C58E1F3A8E3E0048809C /* PaletteTests.swift */; };
 		4AC986AE1F2E8CF300834043 /* AssemblerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC986AD1F2E8CF300834043 /* AssemblerTests.swift */; };
 		4AE7CB031F25861500DC847C /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE7CB021F25861500DC847C /* Assembler.swift */; };
 		4B0D673D1B8E9DBF00876BDF /* APNGKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D673C1B8E9DBF00876BDF /* APNGKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -180,6 +187,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient_rgb.png; sourceTree = "<group>"; };
+		4A984DE91F32A79500C866B2 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
+		4A984DEA1F32A79500C866B2 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		4A984DEB1F32A79500C866B2 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
+		4AB4C58C1F3A8BA60048809C /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		4AB4C58E1F3A8E3E0048809C /* PaletteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteTests.swift; sourceTree = "<group>"; };
 		4AC986AD1F2E8CF300834043 /* AssemblerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = AssemblerTests.swift; sourceTree = "<group>"; tabWidth = 4; };
 		4AE7CB021F25861500DC847C /* Assembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
 		4B0D67391B8E9DBF00876BDF /* APNGKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APNGKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -345,6 +358,7 @@
 				D17398451B90A9B200913AEA /* APNGImageView.swift */,
 				4B19504F1E6D21670047B7DE /* GCDTimer.swift */,
 				4AE7CB021F25861500DC847C /* Assembler.swift */,
+				4AB4C58C1F3A8BA60048809C /* Palette.swift */,
 			);
 			path = APNGKit;
 			sourceTree = "<group>";
@@ -365,6 +379,7 @@
 				D127F62F1B91D9FD0095832A /* APNGImageTests.swift */,
 				4BF022031B94442800F00CDE /* APNGImageViewTests.swift */,
 				D19019A11B9336B100E16EDB /* APNGImageCacheTests.swift */,
+				4AB4C58E1F3A8E3E0048809C /* PaletteTests.swift */,
 			);
 			path = APNGKitTests;
 			sourceTree = "<group>";
@@ -424,6 +439,10 @@
 		D1614E1C1B91EDD700050104 /* TestImages */ = {
 			isa = PBXGroup;
 			children = (
+				4A984DE91F32A79500C866B2 /* 1.png */,
+				4A984DEA1F32A79500C866B2 /* 2.png */,
+				4A984DEB1F32A79500C866B2 /* 3.png */,
+				4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */,
 				4B5DF6831B99718C00C4D421 /* demo.png */,
 				D187FEE81B934F1B0013372D /* pyani.apng */,
 				D190199F1B93351300E16EDB /* elephant_apng.apng */,
@@ -682,12 +701,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A984DEC1F32A79500C866B2 /* 1.png in Resources */,
+				4A6437011F3BF9E200C1DC95 /* gradient_rgb.png in Resources */,
 				D1614E251B91EDE200050104 /* over_previous.apng in Resources */,
 				D1614E331B91EE0000050104 /* minimalAPNG.apng in Resources */,
 				D19019A01B93351400E16EDB /* elephant_apng.apng in Resources */,
 				D1614E261B91EDE200050104 /* spinfox.apng in Resources */,
 				D1614E221B91EDE200050104 /* ball.apng in Resources */,
+				4A984DED1F32A79500C866B2 /* 2.png in Resources */,
 				D1614E241B91EDE200050104 /* over_none.apng in Resources */,
+				4A984DEE1F32A79500C866B2 /* 3.png in Resources */,
 				4B5DF6841B99718C00C4D421 /* demo.png in Resources */,
 				D1614E231B91EDE200050104 /* over_background.apng in Resources */,
 				D187FEE91B934F1B0013372D /* pyani.apng in Resources */,
@@ -781,6 +804,7 @@
 				4B2132101B8EF4D500A39502 /* APNGImage.swift in Sources */,
 				4B6B69071B8EB33100C4868A /* pngtrans.c in Sources */,
 				4B6B69091B8EB33100C4868A /* pngwrite.c in Sources */,
+				4AB4C58D1F3A8BA60048809C /* Palette.swift in Sources */,
 				4B6B690A1B8EB33100C4868A /* pngwtran.c in Sources */,
 				4B6B68FA1B8EB33100C4868A /* pngerror.c in Sources */,
 				4B6B68FE1B8EB33100C4868A /* pngmem.c in Sources */,
@@ -818,6 +842,7 @@
 				4B6B69101B8EB50B00C4868A /* PNGSource.swift in Sources */,
 				4B6B69171B8EBFC700C4868A /* ReaderTests.swift in Sources */,
 				4B2132141B8EFA7900A39502 /* XCTAssertSwiftError.swift in Sources */,
+				4AB4C58F1F3A8E3E0048809C /* PaletteTests.swift in Sources */,
 				4B21320A1B8EF39000A39502 /* LibAPNGTests.swift in Sources */,
 				4B0D67491B8E9DC000876BDF /* APNGKitTests.swift in Sources */,
 				D19019A21B9336B100E16EDB /* APNGImageCacheTests.swift in Sources */,
@@ -849,6 +874,7 @@
 				B25269761E8FDA970096A0A7 /* pngerror.c in Sources */,
 				B252696B1E8FDA470096A0A7 /* Frame.swift in Sources */,
 				B25269811E8FDA970096A0A7 /* pngset.c in Sources */,
+				4A984DF01F32CCDE00C866B2 /* Assembler.swift in Sources */,
 				B25269861E8FDA970096A0A7 /* pngwtran.c in Sources */,
 				B252697B1E8FDA970096A0A7 /* pngpread.c in Sources */,
 				B252696E1E8FDA8F0096A0A7 /* pngwutil.c in Sources */,
@@ -1029,6 +1055,7 @@
 		4B0D674E1B8E9DC000876BDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
@@ -1050,6 +1077,7 @@
 		4B0D674F1B8E9DC000876BDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;

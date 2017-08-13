@@ -45,7 +45,7 @@ func readData(_ pngPointer: png_structp?, outBytes: png_bytep?, byteCountToRead:
     _ = reader.read(outBytes!, bytesCount: byteCountToRead)
 }
 
-struct APNGMeta {
+public struct APNGMeta {
     let width: UInt32
     let height: UInt32
     let bitDepth: UInt32
@@ -63,6 +63,22 @@ struct APNGMeta {
     var firstImageIndex: Int {
         return firstFrameHidden ? 1 : 0
     }
+
+  public init(width: UInt32,
+              height: UInt32,
+    bitDepth: UInt32,
+    colorType: UInt32,
+    rowBytes: UInt32, frameCount: UInt32, playCount: UInt32,
+    firstFrameHidden: Bool) {
+    self.width = width
+    self.height = height
+    self.bitDepth = bitDepth
+    self.colorType = colorType
+    self.rowBytes = rowBytes
+    self.frameCount = frameCount
+    self.playCount = playCount
+    self.firstFrameHidden = firstFrameHidden
+  }
 }
 
 /**

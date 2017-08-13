@@ -27,16 +27,24 @@ import XCTest
 @testable import APNGKit
 
 class AassemblerTests: XCTestCase {
-    func testWriteNoAnimation() throws {
-        let metadata = APNGMeta(width: 2, height: 2, bitDepth: 8,
-                                colorType: UInt32(PNG_COLOR_TYPE_RGB),
-                                rowBytes: 2 * 8 * 3, frameCount: 2, playCount: 0, firstFrameHidden: false)
-        let assembler = try Assembler(metadata: metadata)
-        try assembler.addFrame(1)
-        try assembler.addFrame(2)
-        let data = assembler.encode()
+    func testFrame(_ num: Int) -> UIImage {
+        return UIImage(named: "\(num)", in: Bundle.testBundle, compatibleWith: nil)!
+    }
 
-        let disassembler = Disassembler(data: data)
+    func testWriteNoAnimation() throws {
+        let metadata = APNGMeta(width: 14, height: 14, bitDepth: 8,
+                                colorType: UInt32(PNG_COLOR_TYPE_RGBA),
+                                rowBytes: 2 * 8 * 3, frameCount: 2, playCount: 0,
+                                firstFrameHidden: false)
+        let assembler = try Assembler(metadata: metadata)
+        let duration = RationalDuration(1, 4)
+        try assembler.addFrame(APNGFrame(image: testFrame(1),
+                                         duration: duration))
+        try assembler.addFrame(APNGFrame(image: testFrame(2),
+                                         duration: duration))
+        let data = assembler.encode() as NSData
+        data.write(toFile: "/tmp/test.png", atomically: true)
+        let disassembler = Disassembler(data: data as Data)
         let meta = try disassembler.decodeMeta()
         XCTAssertEqual(2, meta.frameCount)
     }
