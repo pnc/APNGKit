@@ -124,7 +124,8 @@ public class Assembler {
   var info_ptr_write: png_structp
   let stream = OutputStream.toMemory()
 
-  public init(metadata: APNGMeta) throws {
+  public init<P: Palette>(metadata: APNGMeta, palette: P? = nil) throws
+    where P.SampleType == RGBASample {
     png_ptr_write = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                             nil, nil, nil)
     info_ptr_write = png_create_info_struct(png_ptr_write)
@@ -140,9 +141,22 @@ public class Assembler {
     }, nil)
     png_set_flush(png_ptr_write, 0)
     let _ = threadsetjmp {
+      let colorType = palette == nil ? Int32(metadata.colorType) : PNG_COLOR_TYPE_PALETTE
       png_set_IHDR(png_ptr_write, info_ptr_write, metadata.width, metadata.height,
-                   Int32(metadata.bitDepth), Int32(metadata.colorType), PNG_INTERLACE_NONE,
+                   Int32(metadata.bitDepth), colorType, PNG_INTERLACE_NONE,
                    PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+      if let palette = palette {
+        let colors = palette.colors.map { sample in
+          png_color_struct(red: sample.r, green: sample.g, blue: sample.b)
+        }
+        let trans = palette.colors.map { $0.a }
+        png_set_PLTE(png_ptr_write, info_ptr_write,
+                     colors, Int32(palette.colors.count))
+        png_set_tRNS(png_ptr_write, info_ptr_write,
+                     trans, Int32(palette.colors.count), nil)
+      }
+
       png_set_compression_level(png_ptr_write, 9);
       png_set_compression_buffer_size(png_ptr_write, 8192 * 4)
       png_set_bgr(png_ptr_write)

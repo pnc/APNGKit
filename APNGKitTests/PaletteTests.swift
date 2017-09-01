@@ -41,4 +41,14 @@ class PaletteTests: XCTestCase {
     XCTAssertEqual(Set([red, green, blue, gray]),
                    Set(palette.colors))
   }
+
+  func testConvertsImage() {
+    let image = UIImage(named: "bug",
+      in: Bundle.testBundle, compatibleWith: nil)!.cgImage!
+    let outImage = self.medianCut("bug", colors: 256).convert(image: image)
+    //let uiImage = UIImage(cgImage: outImage)
+    XCTAssert(outImage.colorSpace!.model == .indexed,
+              "Wrong CGColorSpaceModel: \(outImage.colorSpace!.model.rawValue)")
+    XCTAssertEqual(4, outImage.colorSpace!.colorTable!.count)
+  }
 }

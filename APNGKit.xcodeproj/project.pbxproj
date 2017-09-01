@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A4D20D11F42A3D2008A754B /* bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A4D20D01F42A3D2008A754B /* bug.png */; };
+		4A4DA2EA1F412684003B4453 /* gradient_rgb_indexed.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A4DA2E91F412684003B4453 /* gradient_rgb_indexed.png */; };
 		4A6437011F3BF9E200C1DC95 /* gradient_rgb.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */; };
 		4A984DEC1F32A79500C866B2 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A984DE91F32A79500C866B2 /* 1.png */; };
 		4A984DED1F32A79500C866B2 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A984DEA1F32A79500C866B2 /* 2.png */; };
@@ -187,6 +189,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4A4D20D01F42A3D2008A754B /* bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bug.png; sourceTree = "<group>"; };
+		4A4DA2E91F412684003B4453 /* gradient_rgb_indexed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient_rgb_indexed.png; sourceTree = "<group>"; };
 		4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient_rgb.png; sourceTree = "<group>"; };
 		4A984DE91F32A79500C866B2 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		4A984DEA1F32A79500C866B2 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
@@ -442,7 +446,9 @@
 				4A984DE91F32A79500C866B2 /* 1.png */,
 				4A984DEA1F32A79500C866B2 /* 2.png */,
 				4A984DEB1F32A79500C866B2 /* 3.png */,
+				4A4D20D01F42A3D2008A754B /* bug.png */,
 				4A6437001F3BF9E200C1DC95 /* gradient_rgb.png */,
+				4A4DA2E91F412684003B4453 /* gradient_rgb_indexed.png */,
 				4B5DF6831B99718C00C4D421 /* demo.png */,
 				D187FEE81B934F1B0013372D /* pyani.apng */,
 				D190199F1B93351300E16EDB /* elephant_apng.apng */,
@@ -708,6 +714,8 @@
 				D19019A01B93351400E16EDB /* elephant_apng.apng in Resources */,
 				D1614E261B91EDE200050104 /* spinfox.apng in Resources */,
 				D1614E221B91EDE200050104 /* ball.apng in Resources */,
+				4A4DA2EA1F412684003B4453 /* gradient_rgb_indexed.png in Resources */,
+				4A4D20D11F42A3D2008A754B /* bug.png in Resources */,
 				4A984DED1F32A79500C866B2 /* 2.png in Resources */,
 				D1614E241B91EDE200050104 /* over_none.apng in Resources */,
 				4A984DEE1F32A79500C866B2 /* 3.png in Resources */,

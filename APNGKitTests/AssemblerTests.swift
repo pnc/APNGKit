@@ -31,7 +31,7 @@ class AassemblerTests: XCTestCase {
         return UIImage(named: "\(num)", in: Bundle.testBundle, compatibleWith: nil)!
     }
 
-    func testWriteNoAnimation() throws {
+    func testWriteTwoFrames() throws {
         let metadata = APNGMeta(width: 14, height: 14, bitDepth: 8,
                                 colorType: UInt32(PNG_COLOR_TYPE_RGBA),
                                 rowBytes: 2 * 8 * 3, frameCount: 2, playCount: 0,
@@ -47,5 +47,9 @@ class AassemblerTests: XCTestCase {
         let disassembler = Disassembler(data: data as Data)
         let meta = try disassembler.decodeMeta()
         XCTAssertEqual(2, meta.frameCount)
+    }
+
+    func testWriteWithPalette() throws {
+        
     }
 }

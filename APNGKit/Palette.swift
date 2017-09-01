@@ -28,7 +28,7 @@ public enum RGBA {
 }
 
 public struct RGBASample: Hashable, Equatable, Sample {
-  public static var componentTypes = [RGBA.R, .G, .B, .A]
+  public static var componentTypes = [RGBA.B, .G, .R, .A]
 
   var r: UInt8
   var g: UInt8
@@ -112,7 +112,10 @@ public class MedianCutPaletteBuilder<P: Palette>: PaletteBuilder where P.SampleT
   }
 
   public func toPalette() -> PaletteType {
-    let cut = medianCut(Array(samples), colors: colors)
+    var cut = medianCut(Array(samples), colors: colors)
+    if PaletteType.SampleType.self == RGBASample.self {
+      cut[0] = RGBASample(r: 0, g: 0, b: 0, a: 0) as! P.SampleType
+    }
     return PaletteType(cut)
   }
 
@@ -167,12 +170,68 @@ public class ManhattanDistancePalette<S: Sample>: Palette {
   public typealias SampleType = S
 
   public let colors: [SampleType]
+  fileprivate var colorCache: [SampleType:UInt8] = [:]
 
   public required init(_ colors: [SampleType]) {
     self.colors = colors
   }
 
+  func bestIndex(for sample: SampleType) -> UInt8 {
+    if colorCache[sample] == nil {
+      var bestDistance: Double?
+      var bestIndex: Int?
+      for (index, color) in self.colors.enumerated() {
+        let distance = sqrt(SampleType.componentTypes.map({
+          pow((Double(sample[$0]) - Double(color[$0])), 2)
+        }).reduce(Double(0), +))
+        if bestDistance == nil || distance < bestDistance! {
+          bestDistance = distance
+          bestIndex = index
+        }
+      }
+      colorCache[sample] = UInt8(bestIndex!)
+    }
+
+    return colorCache[sample]!
+  }
+
   public func convert(image: CGImage) -> CGImage {
-    return image
+    let bpp = SampleType.componentTypes.count
+    assert(bpp == image.bitsPerPixel / 8)
+    var rawColors: [UInt8] = Array(repeating: 0, count: self.colors.count * bpp)
+    for (b, sample) in self.colors.enumerated() {
+      for (c, component) in S.componentTypes.enumerated() {
+        if component as! RGBA != .A {
+          rawColors[b * (bpp - 1) + c] = sample[component]
+        }
+      }
+    }
+    let deviceRGB = CGColorSpaceCreateDeviceRGB()
+    let colorspace = rawColors.withUnsafeBufferPointer { (pointer) -> CGColorSpace? in
+      CGColorSpace(indexedBaseSpace: deviceRGB,
+                   last: self.colors.count - 1,
+                   colorTable: pointer.baseAddress!)
+    }!
+
+    let inputData = image.dataProvider!.data! as Data
+    var pixelData = Data(capacity: image.width * image.height)
+    for i in 0..<image.height {
+      var pixels: [UInt8] = Array(repeating: 0, count: image.width * 2)
+      for (col, j) in stride(from: 0, to: image.bytesPerRow, by: bpp).enumerated() {
+        let start = image.bytesPerRow * i + j
+        let end = start + bpp
+
+        // TODO: We should pass the component order from CGImage
+        let sample = SampleType(Array(inputData.subdata(in: start..<end)))
+        pixels[col] = bestIndex(for: sample)
+        //pixels[col * 2 + 1] = (sample as! RGBASample)[.A]
+      }
+      pixelData.append(&pixels, count: image.width)
+    }
+
+    let provider = CGDataProvider(data: pixelData as CFData)!
+    let info: CGBitmapInfo = []//[CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue)]
+    let new = CGImage(width: image.width, height: image.height, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: image.width, space: colorspace, bitmapInfo: info, provider: provider, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent)!
+    return new
   }
 }
