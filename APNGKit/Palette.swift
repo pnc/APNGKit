@@ -3,7 +3,8 @@ import UIKit
 
 public protocol Palette {
   associatedtype SampleType: Sample
-  init(_ colors: [SampleType])
+  typealias Index = Int
+  init(_ colors: [SampleType], cache: [SampleType:Index]?)
   var colors: [SampleType] { get }
   func convert(image: CGImage) -> CGImage
 }
@@ -19,8 +20,10 @@ public protocol Sample: Hashable, Equatable {
   associatedtype ComponentType: Hashable
   static var componentTypes: [ComponentType] { get }
   //var components: [ComponentType] { get }
-  init(_ components: [UInt8])
+  init(data: Data)
+  init(data: UnsafePointer<UInt8>)
   subscript(component: ComponentType) -> UInt8 { get }
+  func distance(to: Self) -> Double
 }
 
 public enum RGBA {
@@ -35,9 +38,14 @@ public struct RGBASample: Hashable, Equatable, Sample {
   var b: UInt8
   var a: UInt8
 
-  public init(_ components: [UInt8]) {
+  public init(data: Data) {
     // Assuming BGRA
-    self.init(r: components[2], g: components[1], b: components[0], a: components[3])
+    self.init(r: data[2], g: data[1], b: data[0], a: data[3])
+  }
+
+  public init(data: UnsafePointer<UInt8>) {
+    // Assuming BGRA
+    self.init(r: data[2], g: data[1], b: data[0], a: data[3])
   }
 
   public init(r: UInt8, g: UInt8, b: UInt8, a: UInt8) {
@@ -52,6 +60,15 @@ public struct RGBASample: Hashable, Equatable, Sample {
       lhs.g == rhs.g &&
       lhs.b == rhs.b &&
       lhs.a == rhs.a
+  }
+
+  public func distance(to sample: RGBASample) -> Double {
+    var squares = 0.0
+    squares += pow((Double(abs(Int32(r) - Int32(sample.r)))), 2)
+    squares += pow((Double(abs(Int32(g) - Int32(sample.g)))), 2)
+    squares += pow((Double(abs(Int32(b) - Int32(sample.b)))), 2)
+    squares += pow((Double(abs(Int32(a) - Int32(sample.a)))), 2)
+    return sqrt(squares)
   }
 
   public var hashValue: Int {
@@ -105,21 +122,29 @@ public class MedianCutPaletteBuilder<P: Palette>: PaletteBuilder where P.SampleT
         let pointer = dataPointer.advanced(by: image.bytesPerRow * i + j)
         let data = UnsafeBufferPointer(start: pointer, count: 4)
         // TODO: We should pass the component order from CGImage
-        let sample = SampleType(Array(data))
+        let sample = SampleType(data: Data(buffer: data))
         samples.insert(sample)
       }
     }
   }
 
   public func toPalette() -> PaletteType {
-    var cut = medianCut(Array(samples), colors: colors)
+    var cut: [[SampleType]] = medianCut(Array(samples), colors: colors)
+    var cache: [SampleType:Palette.Index] = [:]
     if PaletteType.SampleType.self == RGBASample.self {
-      cut[0] = RGBASample(r: 0, g: 0, b: 0, a: 0) as! P.SampleType
+      cut[0] = [RGBASample(r: 0, g: 0, b: 0, a: 0) as! P.SampleType]
     }
-    return PaletteType(cut)
+    let palette = cut.enumerated().map { (index, samples) -> SampleType in
+      for sample in samples {
+        cache[sample] = index
+      }
+      let middle = samples.count / 2
+      return samples[middle]
+    }
+    return PaletteType(palette, cache: cache)
   }
 
-  func medianCut<T: RandomAccessCollection>(_ samples: T, colors: UInt) -> [SampleType] where T.Iterator.Element == SampleType {
+  func medianCut<T: RandomAccessCollection>(_ samples: T, colors: UInt) -> [[SampleType]] where T.Iterator.Element == SampleType {
       // Median cut does this:
       // 1. Sort the list of samples by the component
       //    with the greatest range (spread) of values.
@@ -127,8 +152,8 @@ public class MedianCutPaletteBuilder<P: Palette>: PaletteBuilder where P.SampleT
       // 3. Recur log_2(palette size).
       var maxes: [SampleType.ComponentType: UInt8] = [:]
       var mins: [SampleType.ComponentType: UInt8] = [:]
-      for sample in samples {
-        for component in SampleType.componentTypes {
+      for component in SampleType.componentTypes {
+        for sample in samples {
           let value = sample[component]
           let minValue = mins[component]
           if minValue == nil || value < minValue! {
@@ -152,9 +177,14 @@ public class MedianCutPaletteBuilder<P: Palette>: PaletteBuilder where P.SampleT
       }
 
     if 1 == colors {
-      // Base case: average the remaining pixels.
-      // TODO: Average
-      return [sorted.last!]
+      // Base case: return all the samples that are left.
+      // We do this rather than choosing the final sample to
+      // 1) generalize the algorithm, since there are several
+      //    approaches to the final sample selection that are
+      //    better than just picking the median
+      // 2) allow pre-populating the palette cache with all known
+      //    samples, to save recomputing which cut they live in.
+      return [sorted]
     } else {
       let middle = sorted.count / 2
       let left = sorted[0..<middle]
@@ -170,29 +200,39 @@ public class ManhattanDistancePalette<S: Sample>: Palette {
   public typealias SampleType = S
 
   public let colors: [SampleType]
-  fileprivate var colorCache: [SampleType:UInt8] = [:]
+  fileprivate var colorCache: [SampleType:Palette.Index]
 
-  public required init(_ colors: [SampleType]) {
+  public required init(_ colors: [SampleType], cache initialCache: [SampleType:Palette.Index]?) {
     self.colors = colors
+    self.colorCache = initialCache ?? [:]
   }
 
   func bestIndex(for sample: SampleType) -> UInt8 {
     if colorCache[sample] == nil {
       var bestDistance: Double?
       var bestIndex: Int?
-      for (index, color) in self.colors.enumerated() {
-        let distance = sqrt(SampleType.componentTypes.map({
-          pow((Double(sample[$0]) - Double(color[$0])), 2)
-        }).reduce(Double(0), +))
+      //for (index, color) in self.colors.enumerated() {
+      var index = 0
+      for color in self.colors {
+        //var squares = 0.0
+//        for component in SampleType.componentTypes {
+//          squares += pow((Double(sample[component]) - Double(color[component])), 2)
+//        }
+        //let rgbaSample = sample as! RGBASample
+        //let rgbaColor = sample as! RGBASample
+        //squares += pow((Double(sample[component]) - Double(color[component])), 2)
+        //let distance = sqrt(squares)
+        let distance = sample.distance(to: color)
         if bestDistance == nil || distance < bestDistance! {
           bestDistance = distance
           bestIndex = index
         }
+        index += 1
       }
-      colorCache[sample] = UInt8(bestIndex!)
+      colorCache[sample] = bestIndex
     }
 
-    return colorCache[sample]!
+    return UInt8(colorCache[sample]!)
   }
 
   public func convert(image: CGImage) -> CGImage {
@@ -213,7 +253,8 @@ public class ManhattanDistancePalette<S: Sample>: Palette {
                    colorTable: pointer.baseAddress!)
     }!
 
-    let inputData = image.dataProvider!.data! as Data
+    let inputData = image.dataProvider!.data!
+    let inputPtr = CFDataGetBytePtr(inputData)!
     var pixelData = Data(capacity: image.width * image.height)
     for i in 0..<image.height {
       var pixels: [UInt8] = Array(repeating: 0, count: image.width * 2)
@@ -222,7 +263,10 @@ public class ManhattanDistancePalette<S: Sample>: Palette {
         let end = start + bpp
 
         // TODO: We should pass the component order from CGImage
-        let sample = SampleType(Array(inputData.subdata(in: start..<end)))
+        //let range = inputData[start..<end]
+
+        //print("this: \(range[3])")
+        let sample = SampleType(data: inputPtr.advanced(by: start))
         pixels[col] = bestIndex(for: sample)
         //pixels[col * 2 + 1] = (sample as! RGBASample)[.A]
       }

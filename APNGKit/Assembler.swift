@@ -192,7 +192,9 @@ public class Assembler {
       }
       
       let rowBytes = png_get_rowbytes(png_ptr_write, info_ptr_write)
-      //assert(rowBytes == cgImage.bytesPerRow)
+      // CGImage seems round up, presumably for alignment reasons, so sometimes
+      // it will have more bytes than we need.
+      assert(rowBytes <= cgImage.bytesPerRow)
       for i in 0..<cgImage.height {
         png_write_row(png_ptr_write, dataPointer.advanced(by: cgImage.bytesPerRow * i))
       }
